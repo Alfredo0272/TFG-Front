@@ -1,8 +1,8 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { LoginResponse } from '../types/company.login';
-import { Company, LoginCompany } from '../models/company.model';
-import { CompaniesRepo } from '../services/companys/api.repo.companies';
-import { LocalStorage } from '../services/local.storage';
+import { LoginResponse } from '../../types/company.login';
+import { Company, LoginCompany } from '../../models/company.model';
+import { CompaniesRepo } from '../../services/companies/api.repo.companies';
+import { LocalStorage } from '../../services/local.storage';
 
 export const loginThunk = createAsyncThunk<
   LoginResponse,
@@ -19,8 +19,8 @@ export const loginThunk = createAsyncThunk<
 
       userStore.set({
         token: result.token,
-        id: result.id,
-        name: result.name,
+        id: result.company.id,
+        name: result.company.name,
       });
 
       return result;
@@ -46,3 +46,28 @@ export const registerCompanyThunk = createAsyncThunk<
     return rejectWithValue('Error registering company');
   }
 });
+
+export const loginWithTokenThunk = createAsyncThunk<
+  LoginResponse,
+  {
+    token: string;
+    repo: CompaniesRepo;
+    userStore: LocalStorage<{ token: string; id: number; name: string }>;
+  }
+>(
+  'auth/loginWithToken',
+  async ({ token, repo, userStore }, { rejectWithValue }) => {
+    try {
+      const result = await repo.loginWithToken(token);
+      userStore.set({
+        token: result.token,
+        id: result.company.id,
+        name: result.company.name,
+      });
+      return result;
+    } catch (error) {
+      console.error(error);
+      return rejectWithValue('Error registering company');
+    }
+  },
+);

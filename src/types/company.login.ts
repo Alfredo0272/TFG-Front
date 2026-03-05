@@ -1,6 +1,6 @@
+import { Company } from '../models/company.model';
+
 export type LoginResponse = {
-  id: number;
-  name: string;
-  email: string;
+  company: Company;
   token: string;
 };
