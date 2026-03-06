@@ -49,6 +49,7 @@ export class CompaniesRepo {
       throw new Error(`${response.status} ${response.statusText}`);
     }
 
+    console.log('Company registered successfully');
     return response.json();
   }
 }

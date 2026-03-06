@@ -9,11 +9,14 @@ export const loginThunk = createAsyncThunk<
   {
     loginCompany: LoginCompany;
     repo: CompaniesRepo;
-    userStore: LocalStorage<{ token: string; id: number; name: string }>;
+    companyStore: LocalStorage<{ token: string; id: number; name: string }>;
   }
 >(
   'auth/login',
-  async ({ loginCompany, repo, userStore }, { rejectWithValue }) => {
+  async (
+    { loginCompany, repo, companyStore: userStore },
+    { rejectWithValue },
+  ) => {
     try {
       const result = await repo.login(loginCompany);
 

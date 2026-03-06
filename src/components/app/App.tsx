@@ -1,6 +1,7 @@
 import { Footer } from '../footer/footer';
 import { Header } from '../header/header';
 import { Router } from '../router/router';
+import { Register } from '../register/register';
 
 export function App() {
   return (
@@ -10,6 +11,8 @@ export function App() {
       <main className="flex-1 bg-primary text-primary-foreground">
         <Router />
       </main>
+
+      <Register />
 
       <Footer />
     </div>
