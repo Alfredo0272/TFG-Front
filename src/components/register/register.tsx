@@ -14,6 +14,7 @@ export function Register() {
   const { register, loading } = useCompanies();
 
   const currentYear = new Date().getFullYear();
+  const emailRegex = /^\S+@\S+\.\S+$/;
 
   const [formData, setFormData] = useState<RegisterForm>({
     name: '',
@@ -42,11 +43,13 @@ export function Register() {
   const validate = () => {
     const newErrors: Partial<Record<keyof RegisterForm, string>> = {};
 
-    if (!formData.name) newErrors.name = 'Company name is required';
+    if (!formData.name.trim()) {
+      newErrors.name = 'Company name is required';
+    }
 
-    if (!formData.email) {
+    if (!formData.email.trim()) {
       newErrors.email = 'Email is required';
-    } else if (!/^\S+@\S+\.\S+$/.test(formData.email)) {
+    } else if (!emailRegex.test(formData.email)) {
       newErrors.email = 'Invalid email';
     }
 
@@ -58,13 +61,16 @@ export function Register() {
       newErrors.confirmPassword = 'Passwords do not match';
     }
 
-    if (!formData.country) newErrors.country = 'Country is required';
+    if (!formData.country.trim()) {
+      newErrors.country = 'Country is required';
+    }
 
     if (formData.foundedYear < 1800 || formData.foundedYear > currentYear) {
       newErrors.foundedYear = 'Invalid year';
     }
 
     setErrors(newErrors);
+
     return Object.keys(newErrors).length === 0;
   };
 
@@ -73,7 +79,6 @@ export function Register() {
 
     if (!validate()) return;
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { confirmPassword, ...companyData } = formData;
 
     await register(companyData);
@@ -90,6 +95,16 @@ export function Register() {
 
   const error = (field: keyof RegisterForm) =>
     errors[field] ? 'border-destructive' : '';
+
+  const isValid =
+    formData.name.trim().length > 0 &&
+    formData.email.trim().length > 0 &&
+    emailRegex.test(formData.email) &&
+    formData.password.length >= 6 &&
+    formData.password === formData.confirmPassword &&
+    formData.country.trim().length > 0 &&
+    formData.foundedYear >= 1800 &&
+    formData.foundedYear <= currentYear;
 
   return (
     <section className="flex items-center justify-center min-h-screen">
@@ -161,7 +176,11 @@ export function Register() {
           <p className="form-error">{errors.foundedYear}</p>
         )}
 
-        <button type="submit" disabled={loading} className="btn-primary w-full">
+        <button
+          type="submit"
+          disabled={loading || !isValid}
+          className="btn-primary w-full"
+        >
           {loading ? 'Registering...' : 'Register'}
         </button>
       </form>

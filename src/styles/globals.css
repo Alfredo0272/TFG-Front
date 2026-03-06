@@ -155,6 +155,13 @@
     bg-secondary text-secondary-foreground hover:bg-secondary/80;
   }
 
+  .btn-primary:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+
   .form-input {
     @apply w-full rounded-md border border-border bg-mauve-400
   px-3 py-2 text-sm
