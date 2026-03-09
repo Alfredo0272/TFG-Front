@@ -4,6 +4,7 @@ import { Register } from '../register/register';
 
 const Dashboard = lazy(() => import('../dashboard/dashboard'));
 const Login = lazy(() => import('../login/login'));
+const CreateFacotry = lazy(() => import('../factories/factories.form'));
 
 export function Router() {
   return (
@@ -14,6 +15,7 @@ export function Router() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/create-factory" element={<CreateFacotry />}></Route>
         </Routes>
       </Suspense>
     </main>

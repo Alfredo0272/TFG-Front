@@ -5,7 +5,7 @@ import { FactoriesRepo } from '../../services/factorys/api.repo.factorys';
 export const createFactoryThunk = createAsyncThunk<
   Factory,
   {
-    newFactory: FormData;
+    newFactory: Partial<Factory>;
     repo: FactoriesRepo;
   }
 >('factories/register', async ({ newFactory, repo }, { rejectWithValue }) => {
@@ -28,5 +28,21 @@ export const loadFactoriesThunk = createAsyncThunk<
   } catch (error) {
     console.error(error);
     return rejectWithValue('Error loading factories');
+  }
+});
+
+export const loadFactoryByIdThunk = createAsyncThunk<
+  Factory,
+  {
+    repo: FactoriesRepo;
+    id: number;
+  }
+>('factories/loadById', async ({ repo, id }, { rejectWithValue }) => {
+  try {
+    const result = await repo.getFactoryById(id);
+    return result;
+  } catch (error) {
+    console.error(error);
+    return rejectWithValue('Error loading factory');
   }
 });

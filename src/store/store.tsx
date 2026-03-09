@@ -1,9 +1,11 @@
 import { Action, ThunkAction, configureStore } from '@reduxjs/toolkit';
 import companieReducer from '../slices/company/company.slice';
+import factoryReducer from '../slices/factory/factory.slice';
 
 export const appStore = configureStore({
   reducer: {
     companieState: companieReducer,
+    factoryState: factoryReducer,
   },
 });
 

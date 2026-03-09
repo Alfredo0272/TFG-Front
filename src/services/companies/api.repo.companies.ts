@@ -33,7 +33,6 @@ export class CompaniesRepo {
     });
     if (!response.ok)
       throw new Error(response.status + ' ' + response.statusText);
-    console.log(response);
     return response.json();
   }
 
@@ -47,10 +46,9 @@ export class CompaniesRepo {
       },
     });
     if (!response.ok) {
-      throw new Error(`${response.status} ${response.statusText}`);
+      throw new Error(`${response.status} + ' ' + ${response.statusText}`);
     }
 
-    console.log('Company registered successfully');
     return response.json();
   }
 }

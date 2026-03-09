@@ -10,9 +10,12 @@ import {
 } from '../slices/company/company.thunk';
 import { LocalStorage } from '../services/local.storage';
 import { Company } from '../models/company.model';
+import { logout } from '../slices/company/company.slice';
+import { useNavigate } from 'react-router-dom';
 
 export function useCompanies() {
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const dispatch = useDispatch<AppDispatch>();
   const repo = useMemo(() => new CompaniesRepo(), []);
@@ -52,7 +55,7 @@ export function useCompanies() {
         loginWithTokenThunk({
           token,
           repo,
-          userStore: companyStore,
+          companyStore,
         }),
       );
     }
@@ -71,10 +74,17 @@ export function useCompanies() {
     [dispatch, repo],
   );
 
+  const makeLogOut = useCallback(() => {
+    dispatch(logout());
+    companyStore.remove();
+    navigate('/login');
+  }, [dispatch, companyStore, navigate]);
+
   return {
     loading,
     login,
     loginWithToken,
     register,
+    makeLogOut,
   };
 }

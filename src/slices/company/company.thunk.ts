@@ -4,6 +4,14 @@ import { Company, LoginCompany } from '../../models/company.model';
 import { CompaniesRepo } from '../../services/companies/api.repo.companies';
 import { LocalStorage } from '../../services/local.storage';
 
+const getErrorMessage = (error: unknown, fallback: string): string => {
+  if (error instanceof Error && error.message.trim().length > 0) {
+    return error.message;
+  }
+
+  return fallback;
+};
+
 export const loginThunk = createAsyncThunk<
   LoginResponse,
   {
@@ -14,21 +22,20 @@ export const loginThunk = createAsyncThunk<
 >(
   'auth/login',
   async (
-    { loginCompany, repo, companyStore: userStore },
+    { loginCompany, repo, companyStore: companyStore },
     { rejectWithValue },
   ) => {
     try {
       const result = await repo.login(loginCompany);
 
-      userStore.set({
+      companyStore.set({
         token: result.token,
         id: result.id,
         name: result.name,
       });
       return result;
     } catch (error) {
-      console.error(error);
-      return rejectWithValue('Invalid credentials');
+      return rejectWithValue(getErrorMessage(error, 'Invalid credentials'));
     }
   },
 );
@@ -44,8 +51,7 @@ export const registerCompanyThunk = createAsyncThunk<
     const result = await repo.registerCompany(newCompany);
     return result;
   } catch (error) {
-    console.error(error);
-    return rejectWithValue('Error registering company');
+    return rejectWithValue(getErrorMessage(error, 'Error registering company'));
   }
 });
 
@@ -54,22 +60,23 @@ export const loginWithTokenThunk = createAsyncThunk<
   {
     token: string;
     repo: CompaniesRepo;
-    userStore: LocalStorage<{ token: string; id: number; name: string }>;
+    companyStore: LocalStorage<{ token: string; id: number; name: string }>;
   }
 >(
   'auth/loginWithToken',
-  async ({ token, repo, userStore }, { rejectWithValue }) => {
+  async ({ token, repo, companyStore }, { rejectWithValue }) => {
     try {
       const result = await repo.loginWithToken(token);
-      userStore.set({
+      companyStore.set({
         token: result.token,
         id: result.id,
         name: result.name,
       });
       return result;
     } catch (error) {
-      console.error(error);
-      return rejectWithValue('Error registering company');
+      return rejectWithValue(
+        getErrorMessage(error, 'Error validating company session'),
+      );
     }
   },
 );
