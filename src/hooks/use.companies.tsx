@@ -5,6 +5,7 @@ import { AppDispatch } from '../store/store';
 import { LoginCompany } from '../models/company.model';
 import {
   loginThunk,
+  loginWithTokenThunk,
   registerCompanyThunk,
 } from '../slices/company/company.thunk';
 import { LocalStorage } from '../services/local.storage';
@@ -41,9 +42,26 @@ export function useCompanies() {
     [dispatch, repo, companyStore],
   );
 
+  const loginWithToken = useCallback(() => {
+    const companyStoreData = companyStore.get();
+
+    if (companyStoreData) {
+      const { token } = companyStoreData;
+
+      dispatch(
+        loginWithTokenThunk({
+          token,
+          repo,
+          userStore: companyStore,
+        }),
+      );
+    }
+  }, [dispatch, repo, companyStore]);
+
   const register = useCallback(
     async (newCompany: Partial<Company>) => {
       setLoading(true);
+
       try {
         await dispatch(registerCompanyThunk({ newCompany, repo })).unwrap();
       } finally {
@@ -56,6 +74,7 @@ export function useCompanies() {
   return {
     loading,
     login,
+    loginWithToken,
     register,
   };
 }

@@ -22,10 +22,9 @@ export const loginThunk = createAsyncThunk<
 
       userStore.set({
         token: result.token,
-        id: result.company.id,
-        name: result.company.name,
+        id: result.id,
+        name: result.name,
       });
-
       return result;
     } catch (error) {
       console.error(error);
@@ -64,8 +63,8 @@ export const loginWithTokenThunk = createAsyncThunk<
       const result = await repo.loginWithToken(token);
       userStore.set({
         token: result.token,
-        id: result.company.id,
-        name: result.company.name,
+        id: result.id,
+        name: result.name,
       });
       return result;
     } catch (error) {

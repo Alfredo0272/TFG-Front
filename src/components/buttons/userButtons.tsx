@@ -5,9 +5,11 @@ import {
   Beer,
   ShoppingCart,
   Hop,
+  UserPlus,
 } from 'lucide-react';
 
 const links = [
+  { name: 'Register', path: '/register', icon: UserPlus },
   { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
   { name: 'Ventas', path: '/sales', icon: ShoppingCart },
   { name: 'Stock', path: '/stock', icon: Factory },
