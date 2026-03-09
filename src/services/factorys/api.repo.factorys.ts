@@ -1,24 +1,28 @@
 import { Factory } from '../../models/factory.model';
 
 export class FactoriesRepo {
-  private baseUrl = 'http://localhost:8080/api/factories/';
+  private baseUrl = 'http://localhost:8080/api/factories';
   private getToken(): string {
-    const token = localStorage.getItem('token');
-    if (!token) {
+    const company = JSON.parse(localStorage.getItem('company') || 'null');
+
+    if (!company?.token) {
       throw new Error('User not authenticated');
     }
-    return token;
+
+    return company.token;
   }
 
-  async createFactory(newFactory: FormData): Promise<Factory> {
-    const response = await fetch(this.baseUrl + 'register', {
+  async createFactory(newFactory: Partial<Factory>): Promise<Factory> {
+    console.log(newFactory);
+    console.log(this.getToken());
+    const response = await fetch(this.baseUrl + '/register', {
       method: 'POST',
-      body: newFactory,
+      body: JSON.stringify(newFactory),
       headers: {
+        'Content-Type': 'application/json',
         Authorization: `Bearer ${this.getToken()}`,
       },
     });
-
     if (!response.ok) {
       throw new Error(`${response.status} ${response.statusText}`);
     }
@@ -40,7 +44,7 @@ export class FactoriesRepo {
   }
 
   async getFactoryById(id: number): Promise<Factory> {
-    const response = await fetch(`${this.baseUrl}${id}`, {
+    const response = await fetch(`${this.baseUrl + '/'}${id}`, {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${this.getToken()}`,
@@ -56,7 +60,7 @@ export class FactoriesRepo {
     id: number,
     updatedFactory: Partial<Factory>,
   ): Promise<Factory> {
-    const response = await fetch(this.baseUrl + id, {
+    const response = await fetch(this.baseUrl + '/' + id, {
       method: 'PUT',
       body: JSON.stringify(updatedFactory),
       headers: {
