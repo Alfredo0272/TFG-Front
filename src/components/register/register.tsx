@@ -74,11 +74,12 @@ export function Register() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.SubmitEvent) => {
     e.preventDefault();
 
     if (!validate()) return;
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { confirmPassword, ...companyData } = formData;
 
     await register(companyData);

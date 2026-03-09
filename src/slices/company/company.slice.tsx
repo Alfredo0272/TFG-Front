@@ -1,12 +1,17 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { Company } from '../../models/company.model';
 import { loginThunk, loginWithTokenThunk } from './company.thunk';
 import { LoginResponse } from '../../types/company.login';
 
 type LoginState = 'logout' | 'logging' | 'error' | 'logged';
 
+export interface AuthCompany {
+  id: number;
+  name: string;
+  email: string;
+}
+
 export type CompanyState = {
-  loggedCompany: Company | null;
+  loggedCompany: AuthCompany | null;
   loginLoadState: LoginState;
   token: string;
 };
@@ -27,7 +32,7 @@ const companySlice = createSlice({
       state.loginLoadState = 'logout';
     },
 
-    setCurrentCompany(state, { payload }: PayloadAction<Company>) {
+    setCurrentCompany(state, { payload }: PayloadAction<AuthCompany>) {
       state.loggedCompany = payload;
     },
   },
@@ -45,15 +50,26 @@ const companySlice = createSlice({
       .addCase(
         loginThunk.fulfilled,
         (state, { payload }: PayloadAction<LoginResponse>) => {
-          state.loggedCompany = payload.company;
+          state.loggedCompany = {
+            id: payload.id,
+            name: payload.name,
+            email: payload.email,
+          };
+
           state.token = payload.token;
           state.loginLoadState = 'logged';
         },
       )
+
       .addCase(
         loginWithTokenThunk.fulfilled,
         (state, { payload }: PayloadAction<LoginResponse>) => {
-          state.loggedCompany = payload.company;
+          state.loggedCompany = {
+            id: payload.id,
+            name: payload.name,
+            email: payload.email,
+          };
+
           state.token = payload.token;
           state.loginLoadState = 'logged';
         },

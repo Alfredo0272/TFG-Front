@@ -23,9 +23,9 @@ export class CompaniesRepo {
   }
 
   async loginWithToken(token: string): Promise<LoginResponse> {
-    const url = this.baseUrl + 'login';
+    const url = this.baseUrl + 'me';
     const response = await fetch(url, {
-      method: 'PATCH',
+      method: 'GET',
       headers: {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',
@@ -33,6 +33,7 @@ export class CompaniesRepo {
     });
     if (!response.ok)
       throw new Error(response.status + ' ' + response.statusText);
+    console.log(response);
     return response.json();
   }
 
