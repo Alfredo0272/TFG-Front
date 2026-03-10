@@ -1,6 +1,6 @@
 import { SyntheticEvent, useState } from 'react';
 import { useCompanies } from '../../hooks/use.companies';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 interface LoginForm {
   email: string;
@@ -108,6 +108,16 @@ export default function Login() {
         >
           {loading ? 'Logging in...' : 'Login'}
         </button>
+
+        <p className="text-center text-sm text-muted-foreground mt-2">
+          Don't have an account?{' '}
+          <Link
+            to="/register"
+            className="font-medium text-input hover:underline"
+          >
+            Register here
+          </Link>
+        </p>
       </form>
     </section>
   );
