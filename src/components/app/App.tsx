@@ -3,12 +3,13 @@ import { Footer } from '../footer/footer';
 import { Header } from '../header/header';
 import { Router } from '../router/router';
 import { useCompanies } from '../../hooks/use.companies';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { LocalStorage } from '../../services/local.storage';
 
 export function App() {
   const { loginWithToken } = useCompanies();
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const companyStore = new LocalStorage<{
@@ -20,12 +21,14 @@ export function App() {
     const company = companyStore.get();
 
     if (!company?.token) {
-      navigate('/login');
+      if (location.pathname !== '/login' && location.pathname !== '/register') {
+        navigate('/login');
+      }
       return;
     }
 
     loginWithToken();
-  }, [loginWithToken, navigate]);
+  }, [loginWithToken, navigate, location.pathname]);
 
   return (
     <div className="flex min-h-screen flex-col bg-primary text-primary-foreground">

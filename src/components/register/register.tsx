@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useCompanies } from '../../hooks/use.companies';
+import { Link } from 'react-router-dom';
 
 interface RegisterForm {
   name: string;
@@ -184,6 +185,12 @@ export function Register() {
         >
           {loading ? 'Registering...' : 'Register'}
         </button>
+        <p className="text-center text-sm text-muted-foreground">
+          Already have an account?{' '}
+          <Link to="/login" className="font-medium text-input hover:underline">
+            Login here
+          </Link>
+        </p>
       </form>
     </section>
   );

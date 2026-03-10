@@ -1,5 +1,7 @@
 import { useFactories } from '../../hooks/use.factories';
+import { useBeers } from '../../hooks/use.beer';
 import { Factory } from '../../models/factory.model';
+import { useNavigate } from 'react-router-dom';
 
 interface FactoryCardProps {
   factory: Factory;
@@ -7,9 +9,17 @@ interface FactoryCardProps {
 
 export default function FactoryCard({ factory }: FactoryCardProps) {
   const { handleFactoryDetails } = useFactories();
+  const { loadBeersByFactory } = useBeers();
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    handleFactoryDetails(factory);
+    loadBeersByFactory(factory.id);
+    navigate(`/factories/${factory.id}`);
+  };
 
   return (
-    <div className="rounded-xl border border-border bg-card-foreground p-6 shadow-sm hover:shadow-md transition ">
+    <div className="rounded-xl border border-border bg-card-foreground p-6 shadow-sm hover:shadow-md transition">
       <div className="space-y-1">
         <h3 className="text-lg font-semibold text-card-foreground">
           {factory.name}
@@ -27,18 +37,9 @@ export default function FactoryCard({ factory }: FactoryCardProps) {
         </p>
       )}
 
-      {factory.beers && (
-        <p className="mt-4 text-sm text-muted-foreground">
-          Beers
-          <span className="ml-2 font-medium text-foreground">
-            {factory.beers.length}
-          </span>
-        </p>
-      )}
-
       <div className="mt-6 flex justify-end">
         <button
-          onClick={() => handleFactoryDetails(factory)}
+          onClick={handleClick}
           className="text-sm font-medium text-primary hover:underline"
         >
           View details
