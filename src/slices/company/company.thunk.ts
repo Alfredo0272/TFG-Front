@@ -50,8 +50,16 @@ export const registerCompanyThunk = createAsyncThunk<
   try {
     const result = await repo.registerCompany(newCompany);
     return result;
-  } catch (error) {
-    return rejectWithValue(getErrorMessage(error, 'Error registering company'));
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      return rejectWithValue(error.message);
+    }
+
+    if (typeof error === 'object' && error !== null && 'message' in error) {
+      return rejectWithValue((error as { message: string }).message);
+    }
+
+    return rejectWithValue('Unknown error');
   }
 });
 
@@ -73,10 +81,16 @@ export const loginWithTokenThunk = createAsyncThunk<
         name: result.name,
       });
       return result;
-    } catch (error) {
-      return rejectWithValue(
-        getErrorMessage(error, 'Error validating company session'),
-      );
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        return rejectWithValue(error.message);
+      }
+
+      if (typeof error === 'object' && error !== null && 'message' in error) {
+        return rejectWithValue((error as { message: string }).message);
+      }
+
+      return rejectWithValue('Unknown error');
     }
   },
 );

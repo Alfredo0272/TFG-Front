@@ -1,16 +1,19 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { Factory } from '../../models/factory.model';
-import { FactoriesRepo } from '../../services/factorys/api.repo.factorys';
+import { Stock } from '../../models/stock.model';
+import { StockRepo } from '../../services/stock/api.repo.stock';
 
-export const createFactoryThunk = createAsyncThunk<
-  Factory,
+export const addStockThunk = createAsyncThunk<
+  Stock,
   {
-    newFactory: Partial<Factory>;
-    repo: FactoriesRepo;
+    newStock: Partial<Stock>;
+    repo: StockRepo;
+  },
+  {
+    rejectValue: string;
   }
->('factories/register', async ({ newFactory, repo }, { rejectWithValue }) => {
+>('NewStock', async ({ newStock, repo }, { rejectWithValue }) => {
   try {
-    const result = await repo.createFactory(newFactory);
+    const result = await repo.registerStock(newStock);
     return result;
   } catch (error: unknown) {
     if (error instanceof Error) {
@@ -25,35 +28,45 @@ export const createFactoryThunk = createAsyncThunk<
   }
 });
 
-export const loadFactoriesThunk = createAsyncThunk<
-  Factory[],
-  { repo: FactoriesRepo }
->('factories/load', async ({ repo }, { rejectWithValue }) => {
-  try {
-    const result = await repo.getAllFactories();
-    return result;
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      return rejectWithValue(error.message);
-    }
-
-    if (typeof error === 'object' && error !== null && 'message' in error) {
-      return rejectWithValue((error as { message: string }).message);
-    }
-
-    return rejectWithValue('Unknown error');
-  }
-});
-
-export const loadFactoryByIdThunk = createAsyncThunk<
-  Factory,
+export const getStockByIdThunk = createAsyncThunk<
+  Stock,
   {
-    repo: FactoriesRepo;
     id: number;
+    repo: StockRepo;
+  },
+  {
+    rejectValue: string;
   }
->('factories/loadById', async ({ repo, id }, { rejectWithValue }) => {
+>('StockById/load', async ({ id, repo }, { rejectWithValue }) => {
   try {
-    const result = await repo.getFactoryById(id);
+    const result = await repo.getStockById(id);
+    return result;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      return rejectWithValue(error.message);
+    }
+
+    if (typeof error === 'object' && error !== null && 'message' in error) {
+      return rejectWithValue((error as { message: string }).message);
+    }
+
+    return rejectWithValue('Unknown error');
+  }
+});
+
+export const addNewStockThunk = createAsyncThunk<
+  Stock,
+  {
+    id: number;
+    newStock: Partial<Stock>;
+    repo: StockRepo;
+  },
+  {
+    rejectValue: string;
+  }
+>('AddNewStock', async ({ id, newStock, repo }, { rejectWithValue }) => {
+  try {
+    const result = await repo.addNewStock(id, newStock);
     return result;
   } catch (error: unknown) {
     if (error instanceof Error) {

@@ -13,8 +13,6 @@ export class FactoriesRepo {
   }
 
   async createFactory(newFactory: Partial<Factory>): Promise<Factory> {
-    console.log(newFactory);
-    console.log(this.getToken());
     const response = await fetch(this.baseUrl + '/register', {
       method: 'POST',
       body: JSON.stringify(newFactory),

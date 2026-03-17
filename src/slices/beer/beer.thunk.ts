@@ -15,7 +15,11 @@ export const loadAllBeersThunk = createAsyncThunk<
       return rejectWithValue(error.message);
     }
 
-    return rejectWithValue('Unknown error loading beers');
+    if (typeof error === 'object' && error !== null && 'message' in error) {
+      return rejectWithValue((error as { message: string }).message);
+    }
+
+    return rejectWithValue('Unknown error');
   }
 });
 
@@ -32,7 +36,11 @@ export const registerBeerThunk = createAsyncThunk<
       return rejectWithValue(error.message);
     }
 
-    return rejectWithValue('Unknown error loading beers');
+    if (typeof error === 'object' && error !== null && 'message' in error) {
+      return rejectWithValue((error as { message: string }).message);
+    }
+
+    return rejectWithValue('Unknown error');
   }
 });
 
@@ -49,6 +57,10 @@ export const loadBeerByFactoriesThunk = createAsyncThunk<
       return rejectWithValue(error.message);
     }
 
-    return rejectWithValue('Unknown error loading beers');
+    if (typeof error === 'object' && error !== null && 'message' in error) {
+      return rejectWithValue((error as { message: string }).message);
+    }
+
+    return rejectWithValue('Unknown error');
   }
 });
