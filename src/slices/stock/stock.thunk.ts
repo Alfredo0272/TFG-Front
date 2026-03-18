@@ -54,6 +54,27 @@ export const getStockByIdThunk = createAsyncThunk<
   }
 });
 
+export const getStockByBeerIdThunk = createAsyncThunk<
+  Stock[],
+  { beerId: number; repo: StockRepo },
+  { rejectValue: string }
+>('Stock/getByBeerId', async ({ beerId, repo }, { rejectWithValue }) => {
+  try {
+    const result = await repo.getStockByBeerId(beerId);
+    return result;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      return rejectWithValue(error.message);
+    }
+
+    if (typeof error === 'object' && error !== null && 'message' in error) {
+      return rejectWithValue((error as { message: string }).message);
+    }
+
+    return rejectWithValue('Unknown error');
+  }
+});
+
 export const addNewStockThunk = createAsyncThunk<
   Stock,
   {

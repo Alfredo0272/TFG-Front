@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useBeers } from '../../hooks/use.beer';
 import { useFactories } from '../../hooks/use.factories';
+import { useStock } from '../../hooks/use.stock';
 import { Link } from 'react-router-dom';
 
 interface BeerForm {
@@ -11,88 +12,126 @@ interface BeerForm {
   factoryId: number;
 }
 
+interface StockForm {
+  productionCostL: number;
+  productionVolumeL: number;
+}
+
+const initialBeerForm: BeerForm = {
+  name: '',
+  style: '',
+  alcohol: 0,
+  pricePerL: 0,
+  factoryId: 0,
+};
+
+const initialStockForm: StockForm = {
+  productionCostL: 0,
+  productionVolumeL: 0,
+};
+
 export default function CreateBeer() {
   const { registerBeer } = useBeers();
   const { factories, loadFactories } = useFactories();
+  const { addStock } = useStock();
 
-  const [formData, setFormData] = useState<BeerForm>({
-    name: '',
-    style: '',
-    alcohol: 0,
-    pricePerL: 0,
-    factoryId: 0,
-  });
-
-  const [errors, setErrors] = useState<Partial<Record<keyof BeerForm, string>>>(
-    {},
-  );
+  const [beerData, setBeerData] = useState<BeerForm>(initialBeerForm);
+  const [stockData, setStockData] = useState<StockForm>(initialStockForm);
+  const [beerErrors, setBeerErrors] = useState<
+    Partial<Record<keyof BeerForm, string>>
+  >({});
+  const [stockErrors, setStockErrors] = useState<
+    Partial<Record<keyof StockForm, string>>
+  >({});
 
   useEffect(() => {
     loadFactories();
   }, [loadFactories]);
 
+  const beerFields = ['name', 'style', 'alcohol', 'pricePerL', 'factoryId'];
+  const numericFields = [
+    'alcohol',
+    'pricePerL',
+    'factoryId',
+    'productionCostL',
+    'productionVolumeL',
+  ];
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     const { name, value } = e.target;
+    const parsed = numericFields.includes(name) ? Number(value) : value;
 
-    setFormData((prev) => ({
-      ...prev,
-      [name]:
-        name === 'alcohol' || name === 'pricePerL' || name === 'factoryId'
-          ? Number(value)
-          : value,
-    }));
-
-    setErrors((prev) => ({ ...prev, [name]: '' }));
+    if (beerFields.includes(name)) {
+      setBeerData((prev) => ({ ...prev, [name]: parsed }));
+      setBeerErrors((prev) => ({ ...prev, [name]: '' }));
+    } else {
+      setStockData((prev) => ({ ...prev, [name]: parsed }));
+      setStockErrors((prev) => ({ ...prev, [name]: '' }));
+    }
   };
 
   const validate = () => {
-    const newErrors: Partial<Record<keyof BeerForm, string>> = {};
+    const newBeerErrors: Partial<Record<keyof BeerForm, string>> = {};
+    const newStockErrors: Partial<Record<keyof StockForm, string>> = {};
 
-    if (!formData.name.trim()) newErrors.name = 'Beer name is required';
-    if (!formData.style.trim()) newErrors.style = 'Style is required';
-    if (!formData.alcohol) newErrors.alcohol = 'Alcohol percentage is required';
-    if (!formData.pricePerL)
-      newErrors.pricePerL = 'Price per liter is required';
-    if (!formData.factoryId) newErrors.factoryId = 'Factory is required';
+    if (!beerData.name.trim()) newBeerErrors.name = 'Beer name is required';
+    if (!beerData.style.trim()) newBeerErrors.style = 'Style is required';
+    if (!beerData.alcohol)
+      newBeerErrors.alcohol = 'Alcohol percentage is required';
+    if (!beerData.pricePerL)
+      newBeerErrors.pricePerL = 'Price per liter is required';
+    if (!beerData.factoryId) newBeerErrors.factoryId = 'Factory is required';
 
-    setErrors(newErrors);
+    if (!stockData.productionCostL)
+      newStockErrors.productionCostL = 'Production cost is required';
+    if (!stockData.productionVolumeL)
+      newStockErrors.productionVolumeL = 'Production volume is required';
 
-    return Object.keys(newErrors).length === 0;
+    setBeerErrors(newBeerErrors);
+    setStockErrors(newStockErrors);
+
+    return (
+      Object.keys(newBeerErrors).length === 0 &&
+      Object.keys(newStockErrors).length === 0
+    );
   };
 
   const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     if (!validate()) return;
 
-    await registerBeer(formData);
+    const createdBeer = await registerBeer(beerData);
 
-    setFormData({
-      name: '',
-      style: '',
-      alcohol: 0,
-      pricePerL: 0,
-      factoryId: 0,
-    });
+    if (createdBeer?.id) {
+      addStock({
+        beerId: createdBeer.id,
+        factoryId: beerData.factoryId,
+        productionCostL: stockData.productionCostL,
+        productionVolumeL: stockData.productionVolumeL,
+        availableL: stockData.productionVolumeL,
+      });
+    }
+
+    setBeerData(initialBeerForm);
+    setStockData(initialStockForm);
   };
 
-  const error = (field: keyof BeerForm) =>
-    errors[field] ? 'border-destructive' : '';
-
   const isValid =
-    formData.name.trim().length > 0 &&
-    formData.style.trim().length > 0 &&
-    formData.alcohol > 0 &&
-    formData.pricePerL > 0 &&
-    formData.factoryId > 0;
+    beerData.name.trim().length > 0 &&
+    beerData.style.trim().length > 0 &&
+    beerData.alcohol > 0 &&
+    beerData.pricePerL > 0 &&
+    beerData.factoryId > 0 &&
+    stockData.productionCostL > 0 &&
+    stockData.productionVolumeL > 0;
 
   return (
     <section className="flex items-center justify-center min-h-screen">
       <form
         onSubmit={handleSubmit}
-        className="form-card max-w-xl w-full space-y-6 "
+        className="form-card max-w-xl w-full space-y-6"
       >
         <h2 className="text-center text-2xl font-semibold">Register Beer</h2>
 
@@ -100,11 +139,11 @@ export default function CreateBeer() {
           <label className="block text-sm font-medium mb-1">Beer name</label>
           <input
             name="name"
-            value={formData.name}
+            value={beerData.name}
             onChange={handleChange}
-            className={`form-input ${error('name')}`}
+            className={`form-input ${beerErrors.name ? 'border-destructive' : ''}`}
           />
-          {errors.name && <p className="form-error">{errors.name}</p>}
+          {beerErrors.name && <p className="form-error">{beerErrors.name}</p>}
         </div>
 
         <div>
@@ -113,11 +152,11 @@ export default function CreateBeer() {
           </label>
           <input
             name="style"
-            value={formData.style}
+            value={beerData.style}
             onChange={handleChange}
-            className={`form-input ${error('style')}`}
+            className={`form-input ${beerErrors.style ? 'border-destructive' : ''}`}
           />
-          {errors.style && <p className="form-error">{errors.style}</p>}
+          {beerErrors.style && <p className="form-error">{beerErrors.style}</p>}
         </div>
 
         <div>
@@ -128,11 +167,13 @@ export default function CreateBeer() {
             step="0.1"
             min="0"
             max="100"
-            value={formData.alcohol}
+            value={beerData.alcohol}
             onChange={handleChange}
-            className={`form-input ${error('alcohol')}`}
+            className={`form-input ${beerErrors.alcohol ? 'border-destructive' : ''}`}
           />
-          {errors.alcohol && <p className="form-error">{errors.alcohol}</p>}
+          {beerErrors.alcohol && (
+            <p className="form-error">{beerErrors.alcohol}</p>
+          )}
         </div>
 
         <div>
@@ -144,34 +185,71 @@ export default function CreateBeer() {
             type="number"
             step="0.01"
             min="0"
-            value={formData.pricePerL}
+            value={beerData.pricePerL}
             onChange={handleChange}
-            className={`form-input ${error('pricePerL')}`}
+            className={`form-input ${beerErrors.pricePerL ? 'border-destructive' : ''}`}
           />
-          {errors.pricePerL && <p className="form-error">{errors.pricePerL}</p>}
+          {beerErrors.pricePerL && (
+            <p className="form-error">{beerErrors.pricePerL}</p>
+          )}
         </div>
 
         <div>
           <label className="block text-sm font-medium mb-1">Factory</label>
-
           <select
             name="factoryId"
-            value={formData.factoryId}
+            value={beerData.factoryId}
             onChange={handleChange}
-            className={`form-input ${error('factoryId')}`}
+            className={`form-input ${beerErrors.factoryId ? 'border-destructive' : ''}`}
           >
             <option value={0}>
               {factories.length ? 'Select factory' : 'Loading factories...'}
             </option>
-
             {factories.map((factory) => (
               <option key={factory.id} value={factory.id}>
                 {factory.name}
               </option>
             ))}
           </select>
+          {beerErrors.factoryId && (
+            <p className="form-error">{beerErrors.factoryId}</p>
+          )}
+        </div>
 
-          {errors.factoryId && <p className="form-error">{errors.factoryId}</p>}
+        <div>
+          <label className="block text-sm font-medium mb-1">
+            Production cost (€/L)
+          </label>
+          <input
+            name="productionCostL"
+            type="number"
+            step="0.01"
+            min="0"
+            value={stockData.productionCostL}
+            onChange={handleChange}
+            className={`form-input ${stockErrors.productionCostL ? 'border-destructive' : ''}`}
+          />
+          {stockErrors.productionCostL && (
+            <p className="form-error">{stockErrors.productionCostL}</p>
+          )}
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium mb-1">
+            Production volume (L)
+          </label>
+          <input
+            name="productionVolumeL"
+            type="number"
+            step="0.01"
+            min="0"
+            value={stockData.productionVolumeL}
+            onChange={handleChange}
+            className={`form-input ${stockErrors.productionVolumeL ? 'border-destructive' : ''}`}
+          />
+          {stockErrors.productionVolumeL && (
+            <p className="form-error">{stockErrors.productionVolumeL}</p>
+          )}
         </div>
 
         <button
