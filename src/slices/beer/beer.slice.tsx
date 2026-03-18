@@ -3,6 +3,7 @@ import { Beer } from '../../models/beer.model';
 import {
   loadAllBeersThunk,
   loadBeerByFactoriesThunk,
+  loadBeerByIdThunk,
   registerBeerThunk,
 } from './beer.thunk';
 
@@ -37,6 +38,9 @@ const beerSlices = createSlice({
       .addCase(registerBeerThunk.pending, (state) => {
         state.beerState = 'loading';
       })
+      .addCase(loadBeerByIdThunk.pending, (state) => {
+        state.beerState = 'loading';
+      })
       .addCase(loadBeerByFactoriesThunk.pending, (state) => {
         state.beerState = 'loading';
       })
@@ -49,6 +53,9 @@ const beerSlices = createSlice({
       .addCase(loadBeerByFactoriesThunk.rejected, (state) => {
         state.beerState = 'error';
       })
+      .addCase(loadBeerByIdThunk.rejected, (state) => {
+        state.beerState = 'error';
+      })
       .addCase(loadAllBeersThunk.fulfilled, (state, { payload }) => {
         state.beers = payload;
         state.beerState = 'idle';
@@ -57,6 +64,10 @@ const beerSlices = createSlice({
         state.currentBeerItem = payload;
         state.beerState = 'idle';
         state.beers.push(payload);
+      })
+      .addCase(loadBeerByIdThunk.fulfilled, (state, { payload }) => {
+        state.currentBeerItem = payload;
+        state.beerState = 'idle';
       })
       .addCase(loadBeerByFactoriesThunk.fulfilled, (state, { payload }) => {
         state.beers = payload;

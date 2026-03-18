@@ -5,6 +5,7 @@ import { AppDispatch, RootState } from '../store/store';
 import {
   loadAllBeersThunk,
   loadBeerByFactoriesThunk,
+  loadBeerByIdThunk,
   registerBeerThunk,
 } from '../slices/beer/beer.thunk';
 import { Beer } from '../models/beer.model';
@@ -19,14 +20,27 @@ export function useBeers() {
 
   const registerBeer = useCallback(
     async (newBeer: Partial<Beer>) => {
-      await dispatch(registerBeerThunk({ newBeer, repo })).unwrap();
+      try {
+        const createdBeer = await dispatch(
+          registerBeerThunk({ newBeer, repo }),
+        ).unwrap();
+        return createdBeer;
+      } catch (error) {
+        console.error('Error registering beer:', error);
+      }
     },
     [dispatch, repo],
   );
-
   const loadAllBeers = useCallback(() => {
     dispatch(loadAllBeersThunk({ repo }));
   }, [dispatch, repo]);
+
+  const loadBeerById = useCallback(
+    (beerId: number) => {
+      dispatch(loadBeerByIdThunk({ beerId, repo }));
+    },
+    [dispatch, repo],
+  );
 
   const loadBeersByFactory = useCallback(
     (factoryId: number) => {
@@ -39,6 +53,7 @@ export function useBeers() {
     beers,
     registerBeer,
     loadAllBeers,
+    loadBeerById,
     currentBeerItem,
     loadBeersByFactory,
   };

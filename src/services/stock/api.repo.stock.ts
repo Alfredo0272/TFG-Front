@@ -58,4 +58,20 @@ export class StockRepo {
 
     return response.json() as Promise<Stock>;
   }
+
+  async getStockByBeerId(BeerId: number): Promise<Stock[]> {
+    const response = await fetch(`${this.baseUrl}/beer/${BeerId}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${this.getToken()}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`${response.status} ${response.statusText}`);
+    }
+
+    return response.json() as Promise<Stock[]>;
+  }
 }

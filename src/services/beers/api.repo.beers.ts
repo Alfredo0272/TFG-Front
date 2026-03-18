@@ -45,6 +45,22 @@ export class BeerRepo {
     return response.json();
   }
 
+  async getBeerById(beerId: number): Promise<Beer> {
+    const response = await fetch(`${this.baseUrl}/${beerId}`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${this.getToken()}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`${response.status} ${response.statusText}`);
+    }
+
+    return response.json();
+  }
+
   async getBeerByFactory(factoryId: number): Promise<Beer[]> {
     const response = await fetch(`${this.baseUrl}/factory/${factoryId}`, {
       method: 'GET',

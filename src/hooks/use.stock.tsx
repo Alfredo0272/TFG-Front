@@ -5,6 +5,7 @@ import { StockRepo } from '../services/stock/api.repo.stock';
 import {
   addNewStockThunk,
   addStockThunk,
+  getStockByBeerIdThunk,
   getStockByIdThunk,
 } from '../slices/stock/stock.thunk';
 import { Stock } from '../models/stock.model';
@@ -13,13 +14,20 @@ export function useStock() {
   const dispatch = useDispatch<AppDispatch>();
   const repo = useMemo(() => new StockRepo(), []);
 
-  const { currentStockItem, stockState } = useSelector(
+  const { currentStockItem, stocks } = useSelector(
     (state: RootState) => state.stockState,
   );
 
   const getStockById = useCallback(
     (id: number) => {
       dispatch(getStockByIdThunk({ id, repo }));
+    },
+    [dispatch, repo],
+  );
+
+  const getStockByBeerId = useCallback(
+    (beerId: number) => {
+      dispatch(getStockByBeerIdThunk({ beerId, repo }));
     },
     [dispatch, repo],
   );
@@ -40,8 +48,9 @@ export function useStock() {
 
   return {
     currentStockItem,
-    stockState,
+    stocks,
     getStockById,
+    getStockByBeerId,
     addStock,
     addNewStock,
   };

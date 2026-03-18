@@ -3,6 +3,7 @@ import { Stock } from '../../models/stock.model';
 import {
   addNewStockThunk,
   addStockThunk,
+  getStockByBeerIdThunk,
   getStockByIdThunk,
 } from './stock.thunk';
 
@@ -11,11 +12,13 @@ export type LoadState = 'idle' | 'loading' | 'error';
 export type StockState = {
   currentStockItem: Stock | null;
   stockState: LoadState;
+  stocks: Stock[];
 };
 
 const initialState: StockState = {
   currentStockItem: null,
   stockState: 'idle',
+  stocks: [],
 };
 
 const stockSlice = createSlice({
@@ -37,6 +40,9 @@ const stockSlice = createSlice({
       .addCase(addNewStockThunk.pending, (state) => {
         state.stockState = 'loading';
       })
+      .addCase(getStockByBeerIdThunk.pending, (state) => {
+        state.stockState = 'loading';
+      })
       .addCase(addStockThunk.rejected, (state) => {
         state.stockState = 'error';
       })
@@ -46,6 +52,9 @@ const stockSlice = createSlice({
       .addCase(addNewStockThunk.rejected, (state) => {
         state.stockState = 'error';
       })
+      .addCase(getStockByBeerIdThunk.rejected, (state) => {
+        state.stockState = 'error';
+      })
       .addCase(addStockThunk.fulfilled, (state, { payload }) => {
         state.stockState = 'idle';
         state.currentStockItem = payload;
@@ -53,6 +62,12 @@ const stockSlice = createSlice({
       .addCase(getStockByIdThunk.fulfilled, (state, { payload }) => {
         state.currentStockItem = payload;
         state.stockState = 'idle';
+      })
+      .addCase(getStockByBeerIdThunk.fulfilled, (state, { payload }) => {
+        state.stockState = 'idle';
+        const incomingIds = new Set(payload.map((s) => s.beerId));
+        const filtered = state.stocks.filter((s) => !incomingIds.has(s.beerId));
+        state.stocks = [...filtered, ...payload];
       })
       .addCase(addNewStockThunk.fulfilled, (state, { payload }) => {
         state.currentStockItem = payload;
