@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { BeerRepo } from '../services/beers/api.repo.beers';
 import { AppDispatch, RootState } from '../store/store';
 import {
+  deleteBeerThunk,
   loadAllBeersThunk,
   loadBeerByFactoriesThunk,
   loadBeerByIdThunk,
@@ -49,11 +50,19 @@ export function useBeers() {
     [dispatch, repo],
   );
 
+  const deleteBeers = useCallback(
+    (beerId: number) => {
+      dispatch(deleteBeerThunk({ repo, beerId }));
+    },
+    [dispatch, repo],
+  );
+
   return {
     beers,
     registerBeer,
     loadAllBeers,
     loadBeerById,
+    deleteBeers,
     currentBeerItem,
     loadBeersByFactory,
   };

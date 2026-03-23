@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Beer } from '../../models/beer.model';
 import {
+  deleteBeerThunk,
   loadAllBeersThunk,
   loadBeerByFactoriesThunk,
   loadBeerByIdThunk,
@@ -44,6 +45,9 @@ const beerSlices = createSlice({
       .addCase(loadBeerByFactoriesThunk.pending, (state) => {
         state.beerState = 'loading';
       })
+      .addCase(deleteBeerThunk.pending, (state) => {
+        state.beerState = 'loading';
+      })
       .addCase(loadAllBeersThunk.rejected, (state) => {
         state.beerState = 'error';
       })
@@ -54,6 +58,9 @@ const beerSlices = createSlice({
         state.beerState = 'error';
       })
       .addCase(loadBeerByIdThunk.rejected, (state) => {
+        state.beerState = 'error';
+      })
+      .addCase(deleteBeerThunk.rejected, (state) => {
         state.beerState = 'error';
       })
       .addCase(loadAllBeersThunk.fulfilled, (state, { payload }) => {
@@ -71,6 +78,10 @@ const beerSlices = createSlice({
       })
       .addCase(loadBeerByFactoriesThunk.fulfilled, (state, { payload }) => {
         state.beers = payload;
+        state.beerState = 'idle';
+      })
+      .addCase(deleteBeerThunk.fulfilled, (state, { payload }) => {
+        state.beers = state.beers.filter((b) => b.id !== payload);
         state.beerState = 'idle';
       });
   },

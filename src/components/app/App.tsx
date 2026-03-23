@@ -28,12 +28,16 @@ export function App() {
     }
 
     loginWithToken();
+
+    if (location.pathname === '/login' || location.pathname === '/') {
+      navigate('/dashboard');
+    }
   }, [loginWithToken, navigate, location.pathname]);
 
   return (
-    <div className="flex min-h-screen flex-col bg-primary text-primary-foreground">
+    <div className="flex min-h-screen flex-col bg-primary text-primary-foreground ">
       <Header />
-      <main className="flex-1 bg-primary text-primary-foreground">
+      <main className="flex-1 bg-primary text-primary-foreground pt-16 pb-16">
         <Router />
       </main>
       <Footer />

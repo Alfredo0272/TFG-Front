@@ -70,8 +70,13 @@ const stockSlice = createSlice({
         state.stocks = [...filtered, ...payload];
       })
       .addCase(addNewStockThunk.fulfilled, (state, { payload }) => {
-        state.currentStockItem = payload;
         state.stockState = 'idle';
+        const index = state.stocks.findIndex((s) => s.id === payload.id);
+        if (index !== -1) {
+          state.stocks[index] = payload;
+        } else {
+          state.stocks.push(payload);
+        }
       });
   },
 });
