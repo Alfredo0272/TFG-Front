@@ -85,3 +85,17 @@ export const loadBeerByFactoriesThunk = createAsyncThunk<
     return rejectWithValue('Unknown error');
   }
 });
+
+export const deleteBeerThunk = createAsyncThunk<
+  number,
+  { repo: BeerRepo; beerId: number },
+  { rejectValue: string }
+>('DeleteBeer', async ({ repo, beerId }, { rejectWithValue }) => {
+  try {
+    await repo.deleteBeer(beerId);
+    return beerId;
+  } catch (error: unknown) {
+    if (error instanceof Error) return rejectWithValue(error.message);
+    return rejectWithValue('Unknown error');
+  }
+});

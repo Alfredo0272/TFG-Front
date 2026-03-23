@@ -76,4 +76,20 @@ export class BeerRepo {
 
     return response.json();
   }
+
+  async deleteBeer(beerId: number): Promise<void> {
+    const response = await fetch(`${this.baseUrl}/${beerId}`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${this.getToken()}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      const errorBody = await response.json();
+
+      throw new Error(errorBody.message ?? 'Error deleting beer');
+    }
+  }
 }
