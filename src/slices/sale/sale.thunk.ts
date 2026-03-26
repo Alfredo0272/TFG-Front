@@ -53,7 +53,7 @@ export const getSalesByFactoryThunk = createAsyncThunk<
     repo: SalesRepo;
     factoryId: number;
   }
->('sale/load', async ({ repo, factoryId }, { rejectWithValue }) => {
+>('sale/loadByFactory', async ({ repo, factoryId }, { rejectWithValue }) => {
   try {
     const result = await repo.getSalesByFactory(factoryId);
     return result;
