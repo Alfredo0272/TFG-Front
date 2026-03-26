@@ -32,6 +32,7 @@ export class FactoriesRepo {
     const response = await fetch(this.baseUrl, {
       method: 'GET',
       headers: {
+        'Content-Type': 'application/json',
         Authorization: `Bearer ${this.getToken()}`,
       },
     });

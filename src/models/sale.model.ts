@@ -1,14 +1,16 @@
-import { Beer } from './beer.model';
-import { Company } from './company.model';
-import { Factory } from './factory.model';
-
-export type Sale = {
-  id: number;
-  company: Company;
-  beer: Beer;
-  factory: Factory;
+export type SaleRegister = {
+  beerId: number;
+  factoryId: number;
   quantityL: number;
   unitPrice: number;
+};
+
+export type Sale = SaleRegister & {
+  id: number;
+  companyId: number;
+  companyName: string;
+  beerName: string;
+  factoryName: string;
   totalPrice: number;
   soldAt: string;
 };
