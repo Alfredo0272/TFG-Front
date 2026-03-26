@@ -2,9 +2,22 @@ import { useFactories } from '../../hooks/use.factories';
 import { useBeers } from '../../hooks/use.beer';
 import { Factory } from '../../models/factory.model';
 import { useNavigate } from 'react-router-dom';
+import { ChevronRight } from 'lucide-react';
 
 interface FactoryCardProps {
   factory: Factory;
+}
+
+function getCapacityColor(capacity: number) {
+  if (capacity >= 5000) return 'text-emerald-400';
+  if (capacity >= 2000) return 'text-amber-300';
+  return 'text-red-400';
+}
+
+function getCapacityStatus(capacity: number) {
+  if (capacity >= 5000) return 'High';
+  if (capacity >= 2000) return 'Medium';
+  return 'Low';
 }
 
 export default function FactoryCard({ factory }: FactoryCardProps) {
@@ -19,32 +32,48 @@ export default function FactoryCard({ factory }: FactoryCardProps) {
   };
 
   return (
-    <div className="rounded-xl border border-border bg-card-foreground p-6 shadow-sm hover:shadow-md transition">
-      <div className="space-y-1">
-        <h3 className="text-lg font-semibold text-card-foreground">
-          {factory.name}
-        </h3>
+    <tr
+      onClick={handleClick}
+      className="
+        group
+        border-b border-border
+        even:bg-muted/10
+        hover:bg-muted/40
+        transition-colors
+        cursor-pointer
+      "
+    >
+      <td className="px-4 py-3 font-semibold text-inherit">{factory.name}</td>
 
-        <p className="text-sm text-muted-foreground">{factory.location}</p>
-      </div>
+      <td className="px-4 py-3 text-muted-foreground">
+        {factory.location ?? (
+          <span className="italic text-xs">No location</span>
+        )}
+      </td>
 
-      {factory.capacity && (
-        <p className="mt-4 text-sm text-muted-foreground">
-          Capacity
-          <span className="ml-2 font-medium text-foreground">
-            {factory.capacity}
+      <td className="px-4 py-3 text-right">
+        {factory.capacity ? (
+          <span
+            className={`
+              px-2 py-1 rounded-md text-xs font-semibold font-mono
+              ${getCapacityColor(factory.capacity)}
+              bg-secondary/30
+            `}
+          >
+            {factory.capacity} L
           </span>
-        </p>
-      )}
+        ) : (
+          <span className="text-muted-foreground italic text-xs">—</span>
+        )}
+      </td>
 
-      <div className="mt-6 flex justify-end">
-        <button
-          onClick={handleClick}
-          className="text-sm font-medium text-primary hover:underline"
-        >
-          View details
-        </button>
-      </div>
-    </div>
+      <td className="px-4 py-3 text-xs text-muted-foreground">
+        {factory.capacity && getCapacityStatus(factory.capacity)}
+      </td>
+
+      <td className="px-4 py-3 text-right text-amber-50 group-hover:text-primary transition">
+        <ChevronRight size={18} />
+      </td>
+    </tr>
   );
 }
