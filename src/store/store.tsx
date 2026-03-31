@@ -4,6 +4,7 @@ import factoryReducer from '../slices/factory/factory.slice';
 import beerReducer from '../slices/beer/beer.slice';
 import stockReducer from '../slices/stock/stock.slice';
 import saleReducer from '../slices/sale/sale.slice';
+import revenueReducer from '../slices/revenue/revenue.slice';
 
 export const appStore = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ export const appStore = configureStore({
     beerState: beerReducer,
     stockState: stockReducer,
     saleState: saleReducer,
+    revenueState: revenueReducer,
   },
 });
 
