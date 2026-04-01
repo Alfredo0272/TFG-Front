@@ -227,3 +227,26 @@ export const getTop5ProfitableBeersThunk = createAsyncThunk<
     return rejectWithValue('Unknown error');
   }
 });
+
+export const getMothlyProfitByAllFactoriesThunk = createAsyncThunk<
+  Revenue[],
+  { repo: RevenueRepo }
+>(
+  'revenue/getMothlyProfitByAllFactories',
+  async ({ repo }, { rejectWithValue }) => {
+    try {
+      const result = await repo.getMothlyProfitByAllFactories();
+      return result;
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        return rejectWithValue(error.message);
+      }
+
+      if (typeof error === 'object' && error !== null && 'message' in error) {
+        return rejectWithValue((error as { message: string }).message);
+      }
+
+      return rejectWithValue('Unknown error');
+    }
+  },
+);

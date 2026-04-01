@@ -51,4 +51,8 @@ export class RevenueRepo {
   getTop5ProfitableBeers(): Promise<Revenue[]> {
     return this.get('/profit/top5');
   }
+
+  getMothlyProfitByAllFactories(): Promise<Revenue[]> {
+    return this.get('/profit/monthly/all-factories');
+  }
 }
