@@ -3,11 +3,11 @@ import {
   LayoutDashboard,
   Factory,
   Beer,
-  ShoppingCart,
+  // ShoppingCart,
   Hop,
   UserPlus,
   LogOut,
-  BoxIcon,
+  ChartNoAxesCombined,
 } from 'lucide-react';
 import { useCompanies } from '../../hooks/use.companies';
 import { LocalStorage } from '../../services/local.storage';
@@ -16,8 +16,8 @@ const publicLinks = [{ name: 'Register', path: '/register', icon: UserPlus }];
 
 const privateLinks = [
   { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
-  { name: 'Sales', path: '/sales', icon: ShoppingCart },
-  { name: 'Stock', path: '/stock', icon: BoxIcon },
+  // { name: 'Sales', path: '/sales', icon: ShoppingCart },
+  { name: 'Analytics', path: '/analytics', icon: ChartNoAxesCombined },
   { name: 'Beer', path: '/beer', icon: Beer },
   { name: 'Factory', path: '/create-factory', icon: Factory },
   { name: 'Top 5', path: '/top5', icon: Hop },

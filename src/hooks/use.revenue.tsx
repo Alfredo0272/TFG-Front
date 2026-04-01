@@ -13,6 +13,7 @@ import {
   getProfitByBeerThunk,
   getProfitByFactoryThunk,
   getTop5ProfitableBeersThunk,
+  getMothlyProfitByAllFactoriesThunk,
 } from '../slices/revenue/revenue.thunk';
 
 export function useRevenue() {
@@ -31,6 +32,7 @@ export function useRevenue() {
     profitByFactory,
     top5ProfitableBeers,
     loadState,
+    monthlyProfitByAllFactories,
   } = useSelector((state: RootState) => state.revenueState);
 
   const getTotalRevenue = useCallback(
@@ -75,6 +77,10 @@ export function useRevenue() {
     () => dispatch(getTop5ProfitableBeersThunk({ repo })),
     [dispatch, repo],
   );
+  const getMothlyProfitByAllFactories = useCallback(
+    () => dispatch(getMothlyProfitByAllFactoriesThunk({ repo })),
+    [dispatch, repo],
+  );
 
   return {
     totalRevenue,
@@ -98,5 +104,7 @@ export function useRevenue() {
     getProfitByBeer,
     getProfitByFactory,
     getTop5ProfitableBeers,
+    getMothlyProfitByAllFactories,
+    monthlyProfitByAllFactories,
   };
 }
