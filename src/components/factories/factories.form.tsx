@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { useFactories } from '../../hooks/use.factories';
+import { useNavigate } from 'react-router-dom';
 
 interface FactoryForm {
   name: string;
   location: string;
-  capacity: number;
+  capacity: number | '';
 }
 
 export default function CreateFacotry() {
@@ -12,19 +13,21 @@ export default function CreateFacotry() {
   const [formData, setFormData] = useState<FactoryForm>({
     name: '',
     location: '',
-    capacity: 0,
+    capacity: '' as unknown as number,
   });
 
   const [errors, setErrors] = useState<
     Partial<Record<keyof FactoryForm, string>>
   >({});
 
+  const navigate = useNavigate();
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
     setFormData((prev) => ({
       ...prev,
-      [name]: name === 'capacity' ? Number(value) : value,
+      [name]: name === 'capacity' ? (value === '' ? '' : Number(value)) : value,
     }));
 
     setErrors((prev) => ({ ...prev, [name]: '' }));
@@ -41,7 +44,7 @@ export default function CreateFacotry() {
       newErrors.location = 'Location is required';
     }
 
-    if (!formData.capacity) {
+    if (formData.capacity === '' || formData.capacity <= 0) {
       newErrors.capacity = 'Capacity is required';
     }
 
@@ -54,12 +57,18 @@ export default function CreateFacotry() {
     e.preventDefault();
     if (!validate()) return;
 
-    await registerFactory(formData);
+    await registerFactory({
+      name: formData.name,
+      location: formData.location,
+      capacity: Number(formData.capacity),
+    });
+
+    navigate('/factories');
 
     setFormData({
       name: '',
       location: '',
-      capacity: 0,
+      capacity: '' as unknown as number,
     });
   };
 
@@ -69,6 +78,7 @@ export default function CreateFacotry() {
   const isValid =
     formData.name.trim().length > 0 &&
     formData.location.trim().length > 0 &&
+    formData.capacity !== '' &&
     formData.capacity > 0;
 
   return (
@@ -101,7 +111,7 @@ export default function CreateFacotry() {
           name="capacity"
           placeholder="Capacity"
           type="number"
-          value={formData.capacity}
+          value={formData.capacity || ''}
           onChange={handleChange}
           className={`form-input ${error('capacity')}`}
         />
@@ -111,7 +121,9 @@ export default function CreateFacotry() {
           type="submit"
           disabled={!isValid}
           className="btn-primary w-full"
-        ></button>
+        >
+          Create Factory
+        </button>
       </form>
     </section>
   );

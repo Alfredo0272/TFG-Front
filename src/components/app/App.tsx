@@ -11,28 +11,31 @@ export function App() {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const companyStore = new LocalStorage<{
+    token: string;
+    id: number;
+    name: string;
+  }>('company');
+
+  const company = companyStore.get();
+
   useEffect(() => {
-    const companyStore = new LocalStorage<{
-      token: string;
-      id: number;
-      name: string;
-    }>('company');
+    if (company?.token) {
+      loginWithToken();
+    }
+  }, [company, loginWithToken]);
 
-    const company = companyStore.get();
-
+  useEffect(() => {
     if (!company?.token) {
       if (location.pathname !== '/login' && location.pathname !== '/register') {
         navigate('/login');
       }
-      return;
+    } else {
+      if (location.pathname === '/login' || location.pathname === '/') {
+        navigate('/dashboard');
+      }
     }
-
-    loginWithToken();
-
-    if (location.pathname === '/login' || location.pathname === '/') {
-      navigate('/dashboard');
-    }
-  }, [loginWithToken, navigate, location.pathname]);
+  }, [company, location.pathname, navigate]);
 
   return (
     <div className="flex min-h-screen flex-col bg-primary text-primary-foreground ">

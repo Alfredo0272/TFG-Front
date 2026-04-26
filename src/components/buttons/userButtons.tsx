@@ -16,7 +16,6 @@ const publicLinks = [{ name: 'Register', path: '/register', icon: UserPlus }];
 
 const privateLinks = [
   { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
-  // { name: 'Sales', path: '/sales', icon: ShoppingCart },
   { name: 'Analytics', path: '/analytics', icon: ChartNoAxesCombined },
   { name: 'Beer', path: '/beer', icon: Beer },
   { name: 'Factory', path: '/create-factory', icon: Factory },

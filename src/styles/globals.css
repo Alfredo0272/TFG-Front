@@ -178,3 +178,13 @@
   p-8 shadow-lg space-y-6;
   }
 }
+
+.MuiChartsSurface-root text {
+  fill: #ffffff !important;
+}
+.MuiChartsAxis-tickLabel tspan {
+  fill: #ffffff !important;
+}
+.MuiChartsLegend-label {
+  color: #ffffff !important;
+}

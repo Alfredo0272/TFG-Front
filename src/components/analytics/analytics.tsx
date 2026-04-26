@@ -229,19 +229,18 @@ export default function Analytics() {
             Side-by-side comparison for every factory
           </p>
           <BarChart
-            layout="horizontal"
             borderRadius={6}
-            yAxis={[
-              {
-                scaleType: 'band',
-                data: factoryNames,
-                tickLabelStyle: { fontSize: 11, fill: '#9ca3af' },
-              },
-            ]}
             xAxis={[
               {
+                scaleType: 'band',
+                data: revenueByBeer.map((item) => item.name ?? ''),
+                tickLabelStyle: { fontSize: 11, fill: '#ffffff' },
+              },
+            ]}
+            yAxis={[
+              {
                 valueFormatter: (v: number) => `€${(v / 1000).toFixed(0)}k`,
-                tickLabelStyle: { fontSize: 11, fill: '#9ca3af' },
+                tickLabelStyle: { fontSize: 11 }, // ✅
               },
             ]}
             series={[
@@ -277,14 +276,16 @@ export default function Analytics() {
             xAxis={[
               {
                 scaleType: 'point',
-                data: MONTHS,
-                tickLabelStyle: { fontSize: 11, fill: '#9ca3af' },
+                data: monthlyRevenue.map(
+                  (item) => MONTHS[(item.month ?? 1) - 1],
+                ),
+                tickLabelStyle: { fontSize: 11, fill: '#ffffff' }, // ✅
               },
             ]}
             yAxis={[
               {
                 valueFormatter: (v: number) => `€${(v / 1000).toFixed(0)}k`,
-                tickLabelStyle: { fontSize: 11, fill: '#9ca3af' },
+                tickLabelStyle: { fontSize: 11, fill: '#ffffff' }, // ✅
               },
             ]}
             series={monthlySeriesByFactory}
