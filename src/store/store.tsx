@@ -8,7 +8,7 @@ import revenueReducer from '../slices/revenue/revenue.slice';
 
 export const appStore = configureStore({
   reducer: {
-    companieState: companieReducer,
+    companiesState: companieReducer,
     factoryState: factoryReducer,
     beerState: beerReducer,
     stockState: stockReducer,

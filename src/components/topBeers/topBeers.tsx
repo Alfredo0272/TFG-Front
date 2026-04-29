@@ -78,7 +78,7 @@ export default function TopBeers() {
   );
 
   return (
-    <section className="max-w-5xl mx-auto px-6 py-10 space-y-6">
+    <section className="max-w-5xl mx-auto px-3 py-4 sm:px-6 sm:py-10 space-y-6">
       <h2 className="text-3xl font-semibold">🏆 Top 5 Beers by Margin</h2>
 
       {topBeers.length === 0 ? (

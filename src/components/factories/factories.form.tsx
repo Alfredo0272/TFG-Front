@@ -13,7 +13,7 @@ export default function CreateFacotry() {
   const [formData, setFormData] = useState<FactoryForm>({
     name: '',
     location: '',
-    capacity: '' as unknown as number,
+    capacity: '',
   });
 
   const [errors, setErrors] = useState<
@@ -53,7 +53,7 @@ export default function CreateFacotry() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!validate()) return;
 
@@ -68,7 +68,7 @@ export default function CreateFacotry() {
     setFormData({
       name: '',
       location: '',
-      capacity: '' as unknown as number,
+      capacity: '',
     });
   };
 

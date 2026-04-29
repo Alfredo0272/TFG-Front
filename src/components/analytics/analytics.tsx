@@ -44,7 +44,7 @@ export default function Analytics() {
     getMonthlyRevenue,
     getTop5ProfitableBeers,
     getRevenueBetweenDates,
-    getMothlyProfitByAllFactories,
+    getMonthlyProfitByAllFactories,
     monthlyProfitByAllFactories,
   } = useRevenue();
 
@@ -59,7 +59,7 @@ export default function Analytics() {
     getProfitByFactory();
     getMonthlyRevenue();
     getTop5ProfitableBeers();
-    getMothlyProfitByAllFactories();
+    getMonthlyProfitByAllFactories();
   }, [
     getTotalRevenue,
     getTotalProfit,
@@ -68,7 +68,7 @@ export default function Analytics() {
     getProfitByFactory,
     getMonthlyRevenue,
     getTop5ProfitableBeers,
-    getMothlyProfitByAllFactories,
+    getMonthlyProfitByAllFactories,
   ]);
 
   useEffect(() => {
@@ -105,7 +105,7 @@ export default function Analytics() {
   }));
 
   return (
-    <section className="mx-auto max-w-7xl px-6 pt-4 pb-12 space-y-8">
+    <section className="mx-auto max-w-7xl px-3 pt-4 pb-8 sm:px-6 sm:pb-12 space-y-6 sm:space-y-8">
       <header>
         <h2 className="text-2xl font-semibold tracking-tight">Analytics</h2>
         <p className="mt-1 text-sm text-muted-foreground">
@@ -146,7 +146,7 @@ export default function Analytics() {
       {/* Charts grid */}
       <div className="grid gap-6 md:grid-cols-2">
         {/* Revenue by beer */}
-        <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
+        <div className="rounded-2xl border border-border bg-card p-3 sm:p-6 shadow-sm">
           <h3 className="font-semibold text-card-foreground">
             Revenue by Beer
           </h3>
@@ -182,7 +182,7 @@ export default function Analytics() {
         </div>
 
         {/* Monthly revenue */}
-        <div className="rounded-2xl border border-border bg-card p-4 shadow-sm">
+        <div className="rounded-2xl border border-border bg-card p-3 sm:p-4 shadow-sm">
           <h3 className="font-semibold text-card-foreground">
             Monthly Revenue
           </h3>
@@ -276,16 +276,14 @@ export default function Analytics() {
             xAxis={[
               {
                 scaleType: 'point',
-                data: monthlyRevenue.map(
-                  (item) => MONTHS[(item.month ?? 1) - 1],
-                ),
-                tickLabelStyle: { fontSize: 11, fill: '#ffffff' }, // ✅
+                data: MONTHS,
+                tickLabelStyle: { fontSize: 11, fill: '#ffffff' },
               },
             ]}
             yAxis={[
               {
                 valueFormatter: (v: number) => `€${(v / 1000).toFixed(0)}k`,
-                tickLabelStyle: { fontSize: 11, fill: '#ffffff' }, // ✅
+                tickLabelStyle: { fontSize: 11, fill: '#ffffff' },
               },
             ]}
             series={monthlySeriesByFactory}
@@ -295,7 +293,7 @@ export default function Analytics() {
         </div>
 
         {/* Top 5 profitable beers — donut */}
-        <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
+        <div className="rounded-2xl border border-border bg-card p-3 sm:p-6 shadow-sm">
           <h3 className="font-semibold text-card-foreground">
             Top 5 Profitable Beers
           </h3>

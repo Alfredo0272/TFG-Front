@@ -75,7 +75,7 @@ export default function Login() {
     loginData.password.length >= 6;
 
   return (
-    <section className="flex items-center justify-center min-h-screen">
+    <section className="flex items-start sm:items-center justify-center min-h-screen overflow-y-auto py-4 px-3">
       <form
         onSubmit={handleSubmit}
         className="form-card max-w-xl w-full space-y-6"

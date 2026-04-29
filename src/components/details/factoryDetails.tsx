@@ -42,7 +42,7 @@ export default function FactoryDetails() {
   };
 
   return (
-    <section className="mx-auto max-w-7xl p-6 pt-24 space-y-8">
+    <section className="mx-auto max-w-7xl px-3 py-4 sm:px-6 sm:pt-10 pt-6 space-y-6 sm:space-y-8">
       <header className="space-y-1">
         <h2 className="text-2xl font-semibold tracking-tight">{factoryName}</h2>
 

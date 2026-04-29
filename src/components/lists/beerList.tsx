@@ -30,7 +30,7 @@ export default function BeerList() {
   }
 
   return (
-    <section className="max-w-7xl mx-auto px-6 py-8 space-y-6">
+    <section className="max-w-7xl mx-auto px-3 py-4 sm:px-6 sm:py-8 space-y-6">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-semibold">Beers</h2>
         <Link
