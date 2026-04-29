@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { useBeers } from '../../hooks/use.beer';
 import { useFactories } from '../../hooks/use.factories';
 import { Stock } from '../../models/stock.model';
@@ -17,7 +18,7 @@ export default function StockModalCard({ stock, onClose }: StockModalProps) {
     loadFactoryById(stock.factoryId);
   }, [stock.beerId, stock.factoryId, loadBeerById, loadFactoryById]);
 
-  return (
+  return createPortal(
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
       onClick={onClose}
@@ -30,6 +31,7 @@ export default function StockModalCard({ stock, onClose }: StockModalProps) {
           <h2 className="text-xl font-semibold">
             {currentBeerItem?.name ?? '...'} — Stock detail
           </h2>
+
           <button
             onClick={onClose}
             className="text-muted-foreground hover:text-foreground transition"
@@ -45,6 +47,7 @@ export default function StockModalCard({ stock, onClose }: StockModalProps) {
               {currentBeerItem?.name ?? '...'}
             </span>
           </div>
+
           <div className="flex justify-between">
             <span className="text-muted-foreground">Factory</span>
             <span className="font-medium">
@@ -58,14 +61,17 @@ export default function StockModalCard({ stock, onClose }: StockModalProps) {
             <span className="text-muted-foreground">Production cost</span>
             <span className="font-medium">{stock.productionCostL} €/L</span>
           </div>
+
           <div className="flex justify-between">
             <span className="text-muted-foreground">Production volume</span>
             <span className="font-medium">{stock.productionVolumeL} L</span>
           </div>
+
           <div className="flex justify-between">
             <span className="text-muted-foreground">Available</span>
             <span className="font-medium">{stock.availableL} L</span>
           </div>
+
           <div className="flex justify-between">
             <span className="text-muted-foreground">Updated at</span>
             <span className="font-medium">
@@ -74,6 +80,7 @@ export default function StockModalCard({ stock, onClose }: StockModalProps) {
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

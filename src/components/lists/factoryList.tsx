@@ -56,8 +56,8 @@ export default function FactoryList() {
         </div>
       </div>
 
-      <div className="mt-6 rounded-2xl border border-border bg-card shadow-sm overflow-hidden">
-        <table className="w-full">
+      <div className="mt-6 rounded-2xl border border-border bg-card shadow-sm overflow-hidden overflow-x-auto">
+        <table className="w-full min-w-[360px]">
           <thead className="bg-card border-b border-border text-xs uppercase text-muted-foreground">
             <tr>
               <th className="px-4 py-3 text-left">Factory</th>

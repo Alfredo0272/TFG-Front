@@ -75,7 +75,7 @@ export function Register() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (e: React.SubmitEvent) => {
+  const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!validate()) return;
@@ -109,7 +109,7 @@ export function Register() {
     formData.foundedYear <= currentYear;
 
   return (
-    <section className="flex items-center justify-center min-h-screen">
+    <section className="flex items-start sm:items-center justify-center min-h-screen overflow-y-auto py-4 px-3">
       <form
         onSubmit={handleSubmit}
         className="form-card max-w-xl w-full space-y-6"

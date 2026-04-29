@@ -20,7 +20,7 @@ export default function Dashboard() {
   const totalSales = sales.length;
 
   return (
-    <section className="flex-1 mx-auto max-w-7xl p-6 pt-24 space-y-10">
+    <section className="flex-1 mx-auto max-w-7xl px-3 py-4 sm:px-6 sm:pt-10 pt-6 space-y-6 sm:space-y-10">
       <header className="space-y-1">
         <h2 className="text-2xl font-semibold tracking-tight">Dashboard</h2>
 

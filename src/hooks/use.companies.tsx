@@ -11,11 +11,14 @@ import {
 import { LocalStorage } from '../services/local.storage';
 import { Company } from '../models/company.model';
 import { logout } from '../slices/company/company.slice';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+
+const SEVEN_DAYS = 7 * 24 * 60 * 60 * 1000;
 
 export function useCompanies() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const dispatch = useDispatch<AppDispatch>();
   const repo = useMemo(() => new CompaniesRepo(), []);
@@ -26,6 +29,7 @@ export function useCompanies() {
         token: string;
         id: number;
         name: string;
+        createdAt: number;
       }>('company'),
     [],
   );
@@ -80,11 +84,31 @@ export function useCompanies() {
     navigate('/login');
   }, [dispatch, companyStore, navigate]);
 
+  const checkSession = useCallback(() => {
+    const company = companyStore.get();
+    const expired = !company?.createdAt || Date.now() - company.createdAt > SEVEN_DAYS;
+
+    if (!company?.token || expired) {
+      companyStore.remove();
+      if (location.pathname !== '/login' && location.pathname !== '/register') {
+        navigate('/login');
+      }
+      return;
+    }
+
+    loginWithToken();
+
+    if (location.pathname === '/login' || location.pathname === '/') {
+      navigate('/dashboard');
+    }
+  }, [companyStore, location.pathname, navigate, loginWithToken]);
+
   return {
     loading,
     login,
     loginWithToken,
     register,
     makeLogOut,
+    checkSession,
   };
 }

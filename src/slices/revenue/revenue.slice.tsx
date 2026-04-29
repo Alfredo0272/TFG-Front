@@ -11,7 +11,7 @@ import {
   getProfitByBeerThunk,
   getProfitByFactoryThunk,
   getTop5ProfitableBeersThunk,
-  getMothlyProfitByAllFactoriesThunk,
+  getMonthlyProfitByAllFactoriesThunk,
 } from './revenue.thunk';
 
 export type LoadState = 'idle' | 'loading' | 'error';
@@ -107,7 +107,7 @@ const revenueSlice = createSlice({
         state.top5ProfitableBeers = payload;
       })
       .addCase(
-        getMothlyProfitByAllFactoriesThunk.fulfilled,
+        getMonthlyProfitByAllFactoriesThunk.fulfilled,
         (state, { payload }) => {
           state.loadState = 'idle';
           state.monthlyProfitByAllFactories = payload;

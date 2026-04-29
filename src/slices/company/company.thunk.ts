@@ -17,7 +17,12 @@ export const loginThunk = createAsyncThunk<
   {
     loginCompany: LoginCompany;
     repo: CompaniesRepo;
-    companyStore: LocalStorage<{ token: string; id: number; name: string }>;
+    companyStore: LocalStorage<{
+      token: string;
+      id: number;
+      name: string;
+      createdAt: number;
+    }>;
   }
 >(
   'auth/login',
@@ -32,6 +37,7 @@ export const loginThunk = createAsyncThunk<
         token: result.token,
         id: result.id,
         name: result.name,
+        createdAt: Date.now(),
       });
       return result;
     } catch (error) {
@@ -68,17 +74,19 @@ export const loginWithTokenThunk = createAsyncThunk<
   {
     token: string;
     repo: CompaniesRepo;
-    companyStore: LocalStorage<{ token: string; id: number; name: string }>;
+    companyStore: LocalStorage<{ token: string; id: number; name: string; createdAt: number }>;
   }
 >(
   'auth/loginWithToken',
   async ({ token, repo, companyStore }, { rejectWithValue }) => {
     try {
       const result = await repo.loginWithToken(token);
+      const existing = companyStore.get();
       companyStore.set({
         token: result.token,
         id: result.id,
         name: result.name,
+        createdAt: existing?.createdAt ?? Date.now(),
       });
       return result;
     } catch (error: unknown) {

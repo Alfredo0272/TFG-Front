@@ -228,14 +228,14 @@ export const getTop5ProfitableBeersThunk = createAsyncThunk<
   }
 });
 
-export const getMothlyProfitByAllFactoriesThunk = createAsyncThunk<
+export const getMonthlyProfitByAllFactoriesThunk = createAsyncThunk<
   Revenue[],
   { repo: RevenueRepo }
 >(
-  'revenue/getMothlyProfitByAllFactories',
+  'revenue/getMonthlyProfitByAllFactories',
   async ({ repo }, { rejectWithValue }) => {
     try {
-      const result = await repo.getMothlyProfitByAllFactories();
+      const result = await repo.getMonthlyProfitByAllFactories();
       return result;
     } catch (error: unknown) {
       if (error instanceof Error) {
