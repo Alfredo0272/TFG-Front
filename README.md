@@ -34,7 +34,7 @@ Aplicación web para la gestión integral de stock, ventas y rentabilidad en emp
 
 BeerManager es el frontend de un sistema de gestión diseñado específicamente para empresas cerveceras. Ofrece autenticación por empresa, gestión multi-fábrica, registro de cervezas con estilos y costes de producción, control de stock en tiempo real, registro de ventas y un módulo de analíticas con gráficos de ingresos, beneficios y tendencias mensuales.
 
-El proyecto forma parte del Trabajo Final del Bootcamp de desarrollo web de **Alfredo Lozano**.
+El proyecto forma parte del Trabajo Final de la FP de Diseño de Aplicaciones Web (DAW) de **Alfredo Lozano**.
 
 ---
 
